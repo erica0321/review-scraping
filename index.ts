@@ -23,9 +23,9 @@ async function extract(url: string): Promise<Result> {
   while (true) {
     const reviewURL = `http://www.10x10.co.kr/shopping/act_itemEvaluate.asp?itemid=${itemId}&sortMtd=ne&itemoption=&page=${pageNo}&evaldiv=a`
     const reviews = await getReviews(reviewURL)
+
     result.push(...reviews)
 
-    //범위를 초과한 reviews에도 '' 값이 들어가있음 (length !== 0) -> 따라서 reviews의 첫번째 값의 message가 ''이면 break
     if (reviews.length === 0 || result.length > 200) {
       console.log(`리뷰 개수: ${result.length}`)
       break
@@ -50,10 +50,10 @@ async function getReviews(url: string): Promise<Review[]> {
 
   trs.each((i, e) => {
     const first = $(e)
-    const second = $(e).siblings('.talkMore').eq(i)
+    const second = $(e).next('.talkMore')
 
-    const writer = first.find('td').eq(3).text()
-    const date = first.find('td').eq(2).text()
+    const writer = first.find('td').eq(3).text().trim()
+    const date = first.find('td').eq(2).text().trim()
 
     //범위 초과하여 참조 시 오류 발생 -> 해결하기 위해 조건문 사용
     const rateText = first.find('img').attr('alt') || ''
