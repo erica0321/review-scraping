@@ -32,7 +32,7 @@ async function getReviews(url: string): Promise<Review[]> {
   for (let i = 0; i < revArr.length; i++) {
     const message = revArr[i].text
     const writer = revArr[i].user.name
-    const date = revArr[i].created_time
+    const date = timestamp(parseInt(revArr[i].created_time))
     const rate = revArr[i].evaluation.satisfaction
     const image = revArr[i].images
     const images = image ? [image[0].image_url] : []
@@ -48,6 +48,16 @@ async function getReviews(url: string): Promise<Review[]> {
 
   return reviews
 }
-// const brandi = await extract('https://www.brandi.co.kr/products/106362123')
-// console.log(brandi)
+
+function timestamp(t: number): string {
+  const date = new Date(t * 1000)
+  const year = date.getFullYear().toString().slice(2)
+  const month = `0${date.getMonth() + 1}`.slice(-2)
+  const day = `0${date.getDate()}`.slice(-2)
+
+  return `${year}/${month}/${day}`
+}
+
+const brandi = await extract('https://www.brandi.co.kr/products/106362123')
+console.log(brandi)
 export { extract }
