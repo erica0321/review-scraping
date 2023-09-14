@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { Result, Review } from './types.js'
 
-async function extract_ably(url: string): Promise<Result> {
+async function extract(url: string): Promise<Result> {
   const params = new URL(url).pathname.split('/')
   const itemId = params[2]
 
@@ -35,4 +35,4 @@ async function getReviews(url: string): Promise<Review[]> {
   return reviews
 }
 
-export { extract_ably }
+export { extract }

@@ -5,13 +5,13 @@ import type { Result, Review } from './types.js'
 
 async function extract(url: string): Promise<Result> {
   const params = new URL(url).searchParams
-  const itemId = params.get('itemid')
-
+  const itemId = params.get('goodNum')
+  const urlHost = new URL(url).host
   const result: Result = []
   let pageNo = 1
 
   while (true) {
-    const reviewURL = `http://www.10x10.co.kr/shopping/act_itemEvaluate.asp?itemid=${itemId}&sortMtd=ne&itemoption=&page=${pageNo}&evaldiv=a`
+    const reviewURL = `https://${urlHost}/good/product_view_goodrate_list?goodNum=${itemId}&page=${pageNo}`
     const reviews = await getReviews(reviewURL)
 
     result.push(...reviews)
@@ -32,25 +32,20 @@ async function getReviews(url: string): Promise<Review[]> {
 
   const resp = await axios.get(url, {})
   const $ = load(resp.data)
-  if ($('.noData').length !== 0) return []
+  if ($('li.nolst-area').text().includes('없습니다')) return []
 
-  const trs = $('tbody tr:not([class])')
+  const li = $('div.prod-review-item')
 
-  trs.each((i, e) => {
-    const first = $(e)
-    const second = $(e).next('.talkMore')
-    const writer = first.find('td').eq(3).text().trim()
-    const date = first.find('td').eq(2).text().trim().slice(2)
+  li.each((i, e) => {
+    const first = $(e).find('.prod-review-date')
+    const writer = first.find('em').text().trim()
+    const date = first.find('span').text().replace(/\./g, '/').slice(2)
+    const rate = $(e).find('.star-rating-wrap > strong').text()
 
-    //범위 초과하여 참조 시 오류 발생 -> 해결하기 위해 조건문 사용
-    const rateText = first.find('img').attr('alt') || ''
-    const rateMatch = rateText.match(/\d+/)
-    const rate = rateMatch ? rateMatch[0] : ''
+    const message = $(e).find('.prod-review-detail').text()
 
-    const message = second.find('p').text()
-
-    const images = second
-      .find('.imgArea > img')
+    const images = $(e)
+      .find('.review-imgwrap > img')
       .toArray()
       .map(e => $(e).attr('src'))
 
@@ -64,5 +59,10 @@ async function getReviews(url: string): Promise<Review[]> {
   })
   return reviews
 }
+
+// const result = await extract(
+//   'https://juuvuv.shop.blogpay.co.kr/good/product_view?goodNum=203092667'
+// )
+// console.log(result)
 
 export { extract }
