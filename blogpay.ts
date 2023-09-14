@@ -6,12 +6,12 @@ import type { Result, Review } from './types.js'
 async function extract(url: string): Promise<Result> {
   const params = new URL(url).searchParams
   const itemId = params.get('goodNum')
-  const urlHost = new URL(url).host
+  const urlHost = new URL(url).origin
   const result: Result = []
   let pageNo = 1
 
   while (true) {
-    const reviewURL = `https://${urlHost}/good/product_view_goodrate_list?goodNum=${itemId}&page=${pageNo}`
+    const reviewURL = `${urlHost}/good/product_view_goodrate_list?goodNum=${itemId}&page=${pageNo}`
     const reviews = await getReviews(reviewURL)
 
     result.push(...reviews)
@@ -32,6 +32,8 @@ async function getReviews(url: string): Promise<Review[]> {
 
   const resp = await axios.get(url, {})
   const $ = load(resp.data)
+  const revOrigin = new URL(url).origin
+
   if ($('li.nolst-area').text().includes('없습니다')) return []
 
   const li = $('div.prod-review-item')
@@ -42,12 +44,12 @@ async function getReviews(url: string): Promise<Review[]> {
     const date = first.find('span').text().replace(/\./g, '/').slice(2)
     const rate = $(e).find('.star-rating-wrap > strong').text()
 
-    const message = $(e).find('.prod-review-detail').text()
+    const message = $(e).find('.prod-review-detail').text().trim()
 
     const images = $(e)
       .find('.review-imgwrap > img')
       .toArray()
-      .map(e => $(e).attr('src'))
+      .map(e => `${revOrigin}${$(e).attr('src')}`)
 
     reviews.push({
       message,
@@ -59,10 +61,5 @@ async function getReviews(url: string): Promise<Review[]> {
   })
   return reviews
 }
-
-// const result = await extract(
-//   'https://juuvuv.shop.blogpay.co.kr/good/product_view?goodNum=203092667'
-// )
-// console.log(result)
 
 export { extract }

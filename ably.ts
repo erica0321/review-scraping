@@ -23,6 +23,7 @@ async function getReviews(url: string): Promise<Review[]> {
     const date = revArr[i].created_at.replace(/-/g, '/').slice(2, 10)
     const images = revArr[i].images
     const rate = ''
+    
     reviews.push({
       message,
       date,
