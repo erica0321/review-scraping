@@ -38,7 +38,7 @@ async function getReviews(url: string): Promise<Review[]> {
 
   const li = $('div.prod-review-item')
 
-  li.each((i, e) => {
+  li.each((_, e) => {
     const first = $(e).find('.prod-review-date')
     const writer = first.find('em').text().trim()
     const date = first.find('span').text().replace(/\./g, '/').slice(2)

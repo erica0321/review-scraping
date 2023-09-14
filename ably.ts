@@ -16,7 +16,7 @@ async function getReviews(url: string): Promise<Review[]> {
   const reviews: Review[] = []
   const resp = await axios.get(url, {})
   const revArr = resp.data.reviews
-
+  
   for (let i = 0; i < revArr.length; i++) {
     const message = revArr[i].contents.trim()
     const writer = revArr[i].writer
