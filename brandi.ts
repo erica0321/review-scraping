@@ -58,6 +58,4 @@ function timestamp(t: number): string {
   return `${year}/${month}/${day}`
 }
 
-const brandi = await extract('https://www.brandi.co.kr/products/106362123')
-console.log(brandi)
 export { extract }
