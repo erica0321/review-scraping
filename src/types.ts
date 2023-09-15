@@ -10,4 +10,4 @@ type Review = {
   images: string[]
 }
 
-export type { Review, Result } 
+export type { Review, Result }
