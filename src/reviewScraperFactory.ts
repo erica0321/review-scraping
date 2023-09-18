@@ -6,11 +6,11 @@ import { BlogPay } from './blogpay.js'
 import { Brandi } from './brandi.js'
 import { Result } from './types.js'
 
-type ScraperType = 'type_tenxten' | 'type_ably' | 'type_blogpay' | 'type_brandi' | null
+type ScraperType = 'type_tenxten' | 'type_ably' | 'type_blogpay' | 'type_brandi' | 'type_null'
 
 function typeCheck(url: URL): string {
   const host = url.host
-  let type: ScraperType = null
+  let type: ScraperType = 'type_null'
 
   if (host.includes('10x10')) {
     type = 'type_tenxten'
