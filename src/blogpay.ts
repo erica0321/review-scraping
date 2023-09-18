@@ -6,7 +6,7 @@ import { load } from 'cheerio'
 async function extract(url: URL): Promise<Result> {
   const params = url.searchParams
   const itemId = params.get('goodNum')
-  const urlHost = new URL(this.url).origin
+  const urlHost = new URL(url).origin
   const result: Result = []
   let pageNo = 1
 

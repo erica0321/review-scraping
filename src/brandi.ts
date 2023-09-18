@@ -2,6 +2,15 @@ import { ReviewScraper } from './reviewScraper.js'
 import type { Result, Review } from './types.js'
 import axios from 'axios'
 
+function timestamp(t: number) {
+  const date = new Date(t * 1000)
+  const year = String(date.getFullYear()).slice(2)
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+
+  return `${year}/${month}/${day}`
+}
+
 async function extract(url: URL): Promise<Result> {
   const params = url.pathname.split('/')
   const itemId = params[2]
@@ -49,7 +58,7 @@ async function getReviews(reviewURL: string) {
   for (let i = 0; i < revArr.length; i++) {
     const message = revArr[i].text
     const writer = revArr[i].user.name
-    const date = this.timestamp(parseInt(revArr[i].created_time))
+    const date = timestamp(parseInt(revArr[i].created_time))
     const rate = revArr[i].evaluation.satisfaction
     const revImages = revArr[i].images
     const images = revImages ? revImages.map(e => e.image_url) : []
@@ -74,14 +83,5 @@ export class Brandi implements ReviewScraper {
 
   async scrap() {
     return extract(this.url)
-  }
-
-  timestamp(t: number) {
-    const date = new Date(t * 1000)
-    const year = String(date.getFullYear()).slice(2)
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const day = String(date.getDate()).padStart(2, '0')
-
-    return `${year}/${month}/${day}`
   }
 }
