@@ -13,6 +13,6 @@ import { reviewScraperFactory } from './src/reviewScraperFactory.js'
 // 'https://www.brandi.co.kr/products/106362123?tab=2'
 
 let reviewScraper = await reviewScraperFactory(
-  'https://www.brandi.co.kr/products/106362123?tab=2'
+  'http://www.10x10.co.kr/shopping/category_prd.asp?itemid=5616003&gaparam=bestaward_b_3'
 )
 console.log(await reviewScraper.scrap())
