@@ -24,7 +24,7 @@ function typeCheck(url: URL): string {
 export async function reviewScraperFactory(
   url: string
 ): Promise<ReviewScraper> {
-  let reviewUrl = new URL(url)
+  const reviewUrl = new URL(url)
   const type = typeCheck(reviewUrl)
 
   switch (type) {
