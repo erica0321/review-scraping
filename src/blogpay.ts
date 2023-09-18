@@ -10,7 +10,7 @@ export class BlogPay implements ReviewScraper {
     this.url = url
   }
 
-  async scrap(): Promise<Result> {
+  async scrap() {
     const params = this.url.searchParams
     const itemId = params.get('goodNum')
     const urlHost = new URL(this.url).origin
@@ -33,7 +33,7 @@ export class BlogPay implements ReviewScraper {
     return result.slice(0, 200)
   }
 
-  async getReviews(reviewURL: string): Promise<Review[]> {
+  async getReviews(reviewURL: string) {
     const reviews: Review[] = []
 
     const resp = await axios.get(reviewURL, {})

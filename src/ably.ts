@@ -9,7 +9,7 @@ export class Ably implements ReviewScraper {
     this.url = url
   }
 
-  async scrap(): Promise<Result> {
+  async scrap() {
     const params = this.url.pathname.split('/')
     const itemId = params[2]
 
@@ -19,7 +19,7 @@ export class Ably implements ReviewScraper {
     return reviews
   }
 
-  async getReviews(reviewURL: string): Promise<Review[]> {
+  async getReviews(reviewURL: string) {
     const reviews: Review[] = []
     const resp = await axios.get(reviewURL, {})
     const revArr = resp.data.reviews
