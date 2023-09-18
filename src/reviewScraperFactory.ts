@@ -4,17 +4,21 @@ import { TenxTen } from './tenxten.js'
 import { Ably } from './ably.js'
 import { BlogPay } from './blogpay.js'
 import { Brandi } from './brandi.js'
+import { Result } from './types.js'
+
+type ScraperType = 'type_tenxten' | 'type_ably' | 'type_blogpay' | 'type_brandi' | null
 
 function typeCheck(url: URL): string {
-  let type = 'null'
+  const host = url.host
+  let type: ScraperType = null
 
-  if (url.host.includes('10x10')) {
+  if (host.includes('10x10')) {
     type = 'type_tenxten'
-  } else if (url.host.includes('a-bly')) {
+  } else if (host.includes('a-bly')) {
     type = 'type_ably'
-  } else if (url.host.includes('blogpay')) {
+  } else if (host.includes('blogpay')) {
     type = 'type_blogpay'
-  } else if (url.host.includes('brandi')) {
+  } else if (host.includes('brandi')) {
     type = 'type_brandi'
   }
 
@@ -36,5 +40,17 @@ export async function reviewScraperFactory(
       return new BlogPay(reviewUrl)
     case 'type_brandi':
       return new Brandi(reviewUrl)
+    default:
+      return new NullScraper(reviewUrl)
+  }
+}
+
+class NullScraper implements ReviewScraper {
+  private url: URL
+  constructor(url: URL) {
+    this.url = url
+  }
+  async scrap(): Promise<Result> {
+    return []
   }
 }
